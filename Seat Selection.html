@@ -1,0 +1,796 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Seat Selection - Movie & Theater Ticketing Wireframe</title>
+    <!-- Tailwind CSS CDN for responsive layout utilities -->
+    <script src="https://cdn.tailwindcss.com"></script>
+    <style>
+        /* ==========================================================================
+           BASE & 30% SCALED WIREFRAME SIZING VARIABLES
+           Matches Homepage.html dimensions and visual tokens for consistency.
+           ========================================================================== */
+        :root {
+            --red-backdrop-max-width: 1500px;
+            --sidebar-width: 390px;
+            --header-banner-height: 70px;
+            --seat-size: 46px;
+        }
+
+        body {
+            background-color: #120d0d; /* Dark outer background matching wireframe */
+            font-family: 'Segoe UI', -apple-system, BlinkMacSystemFont, Roboto, Helvetica, Arial, sans-serif;
+            margin: 0;
+            padding: 0;
+        }
+
+        /* Outer Deep Red Container (#7c1919) */
+        .red-backdrop {
+            background-color: #7c1919;
+            max-width: var(--red-backdrop-max-width);
+            width: 96%;
+        }
+
+        /* Serif Header matching "INITIAL UI WIREFRAME: Seat Selection" */
+        .wireframe-title {
+            font-family: Georgia, 'Times New Roman', Times, serif;
+        }
+
+        /* Wireframe Borders & Surface Colors */
+        .wf-border-thick {
+            border: 2.5px solid #111111;
+        }
+
+        .wf-border-medium {
+            border: 1.5px solid #1e242b;
+        }
+
+        .wf-panel-bg {
+            background-color: #cbd0d6; /* Slate gray matching wireframe panels */
+        }
+
+        .wf-btn-bg {
+            background-color: #c4cdd6;
+            border: 1.5px solid #1e242b;
+            transition: background-color 150ms ease, transform 100ms ease;
+        }
+
+        .wf-btn-bg:hover {
+            background-color: #dce2e8;
+        }
+
+        .wf-btn-bg:active {
+            transform: translateY(1px);
+        }
+
+        /* Primary CTA Button inside Wireframe */
+        .wf-btn-primary {
+            background-color: #1e242b;
+            color: #ffffff;
+            border: 2px solid #111111;
+            transition: background-color 150ms ease, transform 100ms ease;
+        }
+
+        .wf-btn-primary:hover {
+            background-color: #323b46;
+        }
+
+        /* ==========================================================================
+           SEAT MAP WIREFRAME STYLES
+           ========================================================================== */
+        .seat-btn {
+            width: var(--seat-size);
+            height: var(--seat-size);
+            border: 2px solid #111111;
+            border-top-left-radius: 10px;
+            border-top-right-radius: 10px;
+            border-bottom-left-radius: 4px;
+            border-bottom-right-radius: 4px;
+            font-size: 13px;
+            font-weight: 700;
+            display: inline-flex;
+            align-items: center;
+            justify-content: center;
+            position: relative;
+            cursor: pointer;
+            user-select: none;
+            transition: all 120ms ease;
+            background-color: #ffffff;
+            color: #111111;
+        }
+
+        /* Armrest visual detail on bottom of wireframe seats */
+        .seat-btn::after {
+            content: "";
+            position: absolute;
+            bottom: 3px;
+            left: 5px;
+            right: 5px;
+            height: 3px;
+            background-color: currentColor;
+            opacity: 0.25;
+            border-radius: 2px;
+        }
+
+        /* VIP Row Seats (Rows A & B) */
+        .seat-btn.seat-vip {
+            box-shadow: inset 0 0 0 2px #6b7280;
+        }
+
+        /* Hover state for clickable seats */
+        .seat-btn:not(.seat-occupied):hover {
+            transform: translateY(-2px);
+            background-color: #e5e9f0;
+        }
+
+        /* Selected Seat State */
+        .seat-btn.seat-selected {
+            background-color: #1e242b !important;
+            color: #ffffff !important;
+            box-shadow: 0 3px 0 #111111;
+        }
+
+        /* Occupied / Sold Out Seat State (Wireframe Crossed Box) */
+        .seat-btn.seat-occupied {
+            background-color: #b8c0c8;
+            color: #525860;
+            cursor: not-allowed;
+            overflow: hidden;
+        }
+
+        /* Custom Wireframe Radio Input (Matches Homepage Sidebar) */
+        .wf-radio {
+            appearance: none;
+            -webkit-appearance: none;
+            width: 22px;
+            height: 22px;
+            border: 1.5px solid #4b5563;
+            border-radius: 50%;
+            background-color: #f9fafb;
+            display: inline-grid;
+            place-content: center;
+            cursor: pointer;
+            flex-shrink: 0;
+        }
+
+        .wf-radio::before {
+            content: "";
+            width: 11px;
+            height: 11px;
+            border-radius: 50%;
+            transform: scale(0);
+            transition: 120ms transform ease-in-out;
+            background-color: #1f2937;
+        }
+
+        .wf-radio:checked::before {
+            transform: scale(1);
+        }
+
+        /* Right-side wireframe scrollbar visual */
+        .wf-scrollbar-track {
+            width: 22px;
+            background-color: #f1f3f5;
+            border-left: 2px solid #111111;
+            display: flex;
+            flex-direction: column;
+            justify-content: space-between;
+            align-items: center;
+            padding: 4px 0;
+            user-select: none;
+        }
+
+        .wf-scrollbar-thumb {
+            width: 12px;
+            background-color: #abb5be;
+            border-radius: 6px;
+            height: 72%;
+            margin-top: 24px;
+        }
+
+        /* Responsive adjustments for smaller screens */
+        @media (max-width: 640px) {
+            :root {
+                --seat-size: 36px;
+            }
+            .seat-btn {
+                font-size: 11px;
+            }
+        }
+    </style>
+</head>
+<body class="min-h-screen flex flex-col items-center py-6 px-3 md:py-9 md:px-6 text-gray-900">
+
+    <!-- ==========================================================================
+         1. TOP NAVIGATION BAR (Scaled +30%)
+         "Seat selection" is highlighted in white as the active page.
+         All hrefs match the exact HTML file names in your VS Code folder.
+         ========================================================================== -->
+    <nav aria-label="Page Navigation" class="flex justify-center items-center flex-wrap gap-4 md:gap-5 mb-7 w-full max-w-[1500px]">
+        <!-- Inactive Page: Homepage.html -->
+        <a href="Homepage.html" 
+           class="bg-[#1b1212] border border-[#5e5252] text-gray-200 hover:text-white hover:border-gray-300 font-medium text-base md:text-lg px-8 py-3 rounded-full transition-colors">
+            Homepage
+        </a>
+
+        <!-- Active Page: Seat Selection.html -->
+        <a href="Seat Selection.html" 
+           aria-current="page"
+           class="bg-white text-[#6e1919] font-bold text-base md:text-lg px-8 py-3 rounded-full shadow-md transition-transform hover:scale-105">
+            Seat selection
+        </a>
+
+        <!-- Inactive Page: Booking Confirmation.html -->
+        <a href="Booking Confirmation.html" 
+           class="bg-[#1b1212] border border-[#5e5252] text-gray-200 hover:text-white hover:border-gray-300 font-medium text-base md:text-lg px-8 py-3 rounded-full transition-colors">
+            Booking confirmation
+        </a>
+
+        <!-- Inactive Page: Admin Dashboard.html -->
+        <a href="Admin Dashboard.html" 
+           class="bg-[#1b1212] border border-[#5e5252] text-gray-200 hover:text-white hover:border-gray-300 font-medium text-base md:text-lg px-8 py-3 rounded-full transition-colors">
+            Admin dashboard
+        </a>
+    </nav>
+
+    <!-- ==========================================================================
+         2. OUTER RED BACKDROP CONTAINER (Scaled +30%: max-width 1500px)
+         ========================================================================== -->
+    <div class="red-backdrop rounded-[38px] p-6 sm:p-8 md:p-12 shadow-2xl flex flex-col items-center">
+        
+        <!-- Wireframe Header Title -->
+        <h1 class="wireframe-title text-white text-center text-3xl sm:text-4xl md:text-5xl tracking-wide mb-8 font-normal">
+            INITIAL UI WIREFRAME: Seat Selection
+        </h1>
+
+        <!-- ======================================================================
+             3. INNER APPLICATION WINDOW DIV
+             ====================================================================== -->
+        <div class="bg-white wf-border-thick w-full flex flex-col shadow-xl overflow-hidden">
+            
+            <!-- Mock Browser Window Top Bar -->
+            <div class="bg-white border-b-[2.5px] border-[#111111] px-3 py-2.5 flex items-center gap-3">
+                <!-- Gray address/title bar strip -->
+                <div class="wf-panel-bg h-8 md:h-9 flex-1 rounded-sm flex items-center px-4 text-xs md:text-sm text-gray-600 font-mono truncate">
+                    local://folder-activity/Seat Selection.html
+                </div>
+                <!-- Window Close 'X' Button (links back to Homepage) -->
+                <a href="Homepage.html" title="Return to Homepage" aria-label="Close window" class="w-9 h-9 flex items-center justify-center text-gray-800 hover:text-black transition-colors">
+                    <svg class="w-7 h-7" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round">
+                        <line x1="4" y1="4" x2="20" y2="20"></line>
+                        <line x1="20" y1="4" x2="4" y2="20"></line>
+                    </svg>
+                </a>
+            </div>
+
+            <!-- Window Body Wrapper (Main Content + Right Scrollbar Track) -->
+            <div class="flex flex-1 w-full">
+                
+                <!-- Main Window Interior -->
+                <div class="flex-1 p-5 sm:p-7 md:p-8 flex flex-col gap-7">
+                    
+                    <!-- ==========================================================
+                         TOP HEADER ROW: Back Button + Production / Showtime Bar
+                         ========================================================== -->
+                    <header class="flex flex-col xl:flex-row items-stretch gap-4" style="min-height: var(--header-banner-height);">
+                        
+                        <!-- Back to Homepage Wireframe Button -->
+                        <a href="Homepage.html" 
+                           class="wf-btn-bg rounded-xl px-5 py-3.5 flex items-center justify-center gap-2 font-bold text-base md:text-lg text-gray-900 shrink-0">
+                            <span>&larr;</span>
+                            <span>Change Show</span>
+                        </a>
+
+                        <!-- Selected Production & Showtime Selector Bar -->
+                        <div class="flex-1 wf-border-thick bg-white p-3.5 sm:px-5 flex flex-col md:flex-row items-start md:items-center justify-between gap-4">
+                            <div class="flex flex-col sm:flex-row sm:items-center gap-2 sm:gap-4 w-full md:w-auto">
+                                <label for="productionSelect" class="font-bold text-sm md:text-base text-gray-700 whitespace-nowrap">
+                                    Selected Production:
+                                </label>
+                                <select id="productionSelect" 
+                                        class="wf-panel-bg wf-border-medium rounded-lg px-3.5 py-2 font-bold text-base md:text-lg text-gray-900 focus:outline-none focus:ring-2 focus:ring-[#7c1919]">
+                                    <option value="Noli Me Tangere: The Musical" data-times="Fri 7:30 PM,Sun 3:00 PM" selected>
+                                        Noli Me Tangere: The Musical
+                                    </option>
+                                    <option value="The Lion in Winter" data-times="Fri 6:00 PM,Sat 2:00 PM,Sat 7:00 PM">
+                                        The Lion in Winter
+                                    </option>
+                                    <option value="A Midsummer Night's Dream" data-times="Sat 5:00 PM,Sun 6:00 PM">
+                                        A Midsummer Night's Dream
+                                    </option>
+                                    <option value="Ang Kuwento ni Mabuti" data-times="Thu 7:00 PM,Sat 3:00 PM">
+                                        Ang Kuwento ni Mabuti
+                                    </option>
+                                </select>
+                            </div>
+
+                            <!-- Schedule / Showtime Dropdown -->
+                            <div class="flex items-center gap-3 w-full md:w-auto justify-end">
+                                <label for="showtimeSelect" class="font-bold text-sm md:text-base text-gray-700 whitespace-nowrap">
+                                    Schedule:
+                                </label>
+                                <select id="showtimeSelect" 
+                                        class="wf-panel-bg wf-border-medium rounded-lg px-3.5 py-2 font-semibold text-sm md:text-base text-gray-900 focus:outline-none focus:ring-2 focus:ring-[#7c1919]">
+                                    <option value="Fri 7:30 PM">Fri 7:30 PM</option>
+                                    <option value="Sun 3:00 PM">Sun 3:00 PM</option>
+                                </select>
+                            </div>
+                        </div>
+                    </header>
+
+                    <!-- ==========================================================
+                         MAIN 2-COLUMN SEAT SELECTION WORKSPACE
+                         Left/Center: Auditorium Stage + Interactive Seat Grid
+                         Right: Wireframe Booking Summary Panel
+                         ========================================================== -->
+                    <div class="flex flex-col lg:flex-row gap-7 items-stretch">
+                        
+                        <!-- LEFT / MAIN COLUMN: AUDITORIUM SEAT MAP -->
+                        <section aria-label="Auditorium Seat Map" class="flex-1 wf-panel-bg wf-border-thick p-5 sm:p-7 flex flex-col items-center justify-between">
+                            
+                            <!-- 1. STAGE / SCREEN WIREFRAME BANNER WITH CROSSED LINES -->
+                            <div class="w-full max-w-3xl mb-6">
+                                <div class="bg-white wf-border-thick h-16 sm:h-20 relative flex items-center justify-center overflow-hidden shadow-sm">
+                                    <!-- Wireframe diagonal cross lines ('X') matching Homepage banner style -->
+                                    <svg class="absolute inset-0 w-full h-full" viewBox="0 0 600 80" preserveAspectRatio="none">
+                                        <line x1="0" y1="0" x2="600" y2="80" stroke="#9ca3af" stroke-width="1.5" />
+                                        <line x1="0" y1="80" x2="600" y2="0" stroke="#9ca3af" stroke-width="1.5" />
+                                    </svg>
+                                    <span class="relative z-10 bg-white px-6 py-1 wf-border-medium font-bold text-base sm:text-lg tracking-widest uppercase text-gray-900">
+                                        STAGE / MAIN CURTAIN
+                                    </span>
+                                </div>
+                                <!-- Subtle Stage Apron Curve Indicator -->
+                                <div class="w-4/5 mx-auto h-3 bg-[#9aa3ad] border-x-2 border-b-2 border-[#111111] rounded-b-full"></div>
+                            </div>
+
+                            <!-- 2. SEAT STATUS LEGEND BAR -->
+                            <div class="w-full max-w-3xl bg-white wf-border-medium rounded-xl px-4 py-3 mb-7 flex flex-wrap items-center justify-center gap-5 sm:gap-8 text-sm md:text-base font-medium">
+                                <!-- Available -->
+                                <div class="flex items-center gap-2.5">
+                                    <span class="w-6 h-6 bg-white border-2 border-[#111111] rounded-t-md inline-block"></span>
+                                    <span>Available (&#8369;550)</span>
+                                </div>
+                                <!-- VIP Row -->
+                                <div class="flex items-center gap-2.5">
+                                    <span class="w-6 h-6 bg-white border-2 border-[#111111] rounded-t-md inline-block" style="box-shadow: inset 0 0 0 2px #6b7280;"></span>
+                                    <span>VIP Row A&ndash;B (&#8369;850)</span>
+                                </div>
+                                <!-- Selected -->
+                                <div class="flex items-center gap-2.5">
+                                    <span class="w-6 h-6 bg-[#1e242b] border-2 border-[#111111] rounded-t-md inline-block"></span>
+                                    <span>Selected</span>
+                                </div>
+                                <!-- Occupied -->
+                                <div class="flex items-center gap-2.5">
+                                    <span class="w-6 h-6 bg-[#b8c0c8] border-2 border-[#111111] rounded-t-md inline-flex items-center justify-center text-xs font-bold text-gray-600">
+                                        &#10005;
+                                    </span>
+                                    <span>Occupied</span>
+                                </div>
+                            </div>
+
+                            <!-- 3. INTERACTIVE AUDITORIUM SEAT GRID (Rows A to G) -->
+                            <div class="w-full overflow-x-auto pb-3 flex justify-center">
+                                <div class="inline-flex flex-col gap-3.5 min-w-max px-2">
+                                    
+                                    <!-- Column Header Numbers (Left Wing 1-3 | Aisle | Center 4-7 | Aisle | Right Wing 8-10) -->
+                                    <div class="flex items-center gap-2 text-xs md:text-sm font-bold text-gray-700 pb-1">
+                                        <span class="w-8 text-center">Row</span>
+                                        <!-- Left Section (Seats 1-3) -->
+                                        <div class="flex gap-2">
+                                            <span class="w-[36px] sm:w-[46px] text-center">1</span>
+                                            <span class="w-[36px] sm:w-[46px] text-center">2</span>
+                                            <span class="w-[36px] sm:w-[46px] text-center">3</span>
+                                        </div>
+                                        <!-- Left Aisle Spacer -->
+                                        <span class="w-6 sm:w-8 text-center text-[11px] uppercase tracking-tighter text-gray-500">Aisle</span>
+                                        <!-- Center Section (Seats 4-7) -->
+                                        <div class="flex gap-2">
+                                            <span class="w-[36px] sm:w-[46px] text-center">4</span>
+                                            <span class="w-[36px] sm:w-[46px] text-center">5</span>
+                                            <span class="w-[36px] sm:w-[46px] text-center">6</span>
+                                            <span class="w-[36px] sm:w-[46px] text-center">7</span>
+                                        </div>
+                                        <!-- Right Aisle Spacer -->
+                                        <span class="w-6 sm:w-8 text-center text-[11px] uppercase tracking-tighter text-gray-500">Aisle</span>
+                                        <!-- Right Section (Seats 8-10) -->
+                                        <div class="flex gap-2">
+                                            <span class="w-[36px] sm:w-[46px] text-center">8</span>
+                                            <span class="w-[36px] sm:w-[46px] text-center">9</span>
+                                            <span class="w-[36px] sm:w-[46px] text-center">10</span>
+                                        </div>
+                                        <span class="w-8 text-center">Row</span>
+                                    </div>
+
+                                    <!-- Seat Rows Container (Populated by JS below for clean maintainability) -->
+                                    <div id="seatGridContainer" class="flex flex-col gap-3"></div>
+
+                                </div>
+                            </div>
+
+                            <!-- 4. BOTTOM FOOTNOTE BAR -->
+                            <div class="w-full max-w-3xl mt-6 pt-4 border-t border-gray-400 flex flex-col sm:flex-row items-center justify-between text-xs md:text-sm text-gray-800 gap-2">
+                                <span><strong>Tip:</strong> Click any available seat to select or deselect it.</span>
+                                <span>Wheelchair accessible spaces available in Row G (G1, G10).</span>
+                            </div>
+                        </section>
+
+                        <!-- ======================================================
+                             RIGHT SIDEBAR PANEL: BOOKING SUMMARY & ACTIONS
+                             Matches the exact wireframe box look of Homepage sidebar
+                             ====================================================== -->
+                        <aside class="w-full lg:w-[380px] xl:w-[410px] shrink-0 wf-panel-bg wf-border-thick p-5 sm:p-6 flex flex-col justify-between gap-5">
+                            
+                            <div class="flex flex-col gap-4">
+                                <!-- Sidebar Title Box -->
+                                <div class="bg-white wf-border-medium rounded-xl py-3 px-4 text-center">
+                                    <h2 class="font-bold text-lg md:text-xl text-gray-900 tracking-wide">
+                                        Booking Summary
+                                    </h2>
+                                </div>
+
+                                <!-- Show & Schedule Summary Card -->
+                                <div class="wf-btn-bg rounded-xl p-4 flex flex-col gap-2">
+                                    <div class="text-xs font-bold uppercase tracking-wider text-gray-600">
+                                        Production Details
+                                    </div>
+                                    <div id="summaryShowTitle" class="font-bold text-base md:text-lg text-gray-900 leading-snug">
+                                        Noli Me Tangere: The Musical
+                                    </div>
+                                    <div class="flex items-center justify-between text-sm md:text-base text-gray-800 pt-1 border-t border-gray-400">
+                                        <span>Showtime:</span>
+                                        <strong id="summaryShowtime">Fri 7:30 PM</strong>
+                                    </div>
+                                </div>
+
+                                <!-- Venue / Nearby Theatres Radio Toggle (Matches Homepage Sidebar) -->
+                                <div class="wf-btn-bg rounded-xl p-4 flex flex-col gap-2.5">
+                                    <h3 class="font-bold text-sm md:text-base text-gray-900">
+                                        Nearby Theatres / Stage
+                                    </h3>
+                                    <label class="flex items-center gap-3 text-sm md:text-base text-gray-900 cursor-pointer select-none">
+                                        <input type="radio" name="venue_stage" value="Main Hall" class="wf-radio" checked />
+                                        <span>Main Hall (Orchestra)</span>
+                                    </label>
+                                    <label class="flex items-center gap-3 text-sm md:text-base text-gray-900 cursor-pointer select-none">
+                                        <input type="radio" name="venue_stage" value="Studio Stage" class="wf-radio" />
+                                        <span>Studio Stage (Blackbox)</span>
+                                    </label>
+                                </div>
+
+                                <!-- Selected Seats Display Box -->
+                                <div class="wf-btn-bg rounded-xl p-4 flex flex-col gap-2.5">
+                                    <div class="flex items-center justify-between">
+                                        <h3 class="font-bold text-sm md:text-base text-gray-900">
+                                            Selected Seats (<span id="seatCountBadge">2</span>)
+                                        </h3>
+                                        <button type="button" id="clearSeatsBtn" class="text-xs font-bold underline text-gray-800 hover:text-black">
+                                            Clear All
+                                        </button>
+                                    </div>
+                                    <!-- Dynamic Seat Pills -->
+                                    <div id="selectedSeatsList" class="flex flex-wrap gap-2 min-h-[42px] items-center bg-white wf-border-medium rounded-lg p-2.5">
+                                        <!-- Populated dynamically via JS -->
+                                    </div>
+                                </div>
+
+                                <!-- Price Breakdown Box -->
+                                <div class="wf-btn-bg rounded-xl p-4 flex flex-col gap-2 text-sm md:text-base">
+                                    <h3 class="font-bold text-sm md:text-base text-gray-900 mb-1">
+                                        Price Breakdown
+                                    </h3>
+                                    <div class="flex justify-between text-gray-800">
+                                        <span>VIP Seats (<span id="vipCount">2</span> &times; &#8369;850)</span>
+                                        <span id="vipSubtotal" class="font-semibold">&#8369;1,700</span>
+                                    </div>
+                                    <div class="flex justify-between text-gray-800">
+                                        <span>Standard Seats (<span id="stdCount">0</span> &times; &#8369;550)</span>
+                                        <span id="stdSubtotal" class="font-semibold">&#8369;0</span>
+                                    </div>
+                                    <div class="flex justify-between text-gray-800">
+                                        <span>Booking Fee</span>
+                                        <span id="bookingFee" class="font-semibold">&#8369;50</span>
+                                    </div>
+                                    <div class="border-t-2 border-[#111111] my-1 pt-2 flex justify-between items-baseline">
+                                        <span class="font-bold text-base md:text-lg text-gray-900">Total Amount</span>
+                                        <span id="totalPriceDisplay" class="font-bold text-xl md:text-2xl text-gray-900">&#8369;1,750</span>
+                                    </div>
+                                </div>
+                            </div>
+
+                            <!-- Action Buttons (Links to Booking Confirmation.html & Homepage.html) -->
+                            <div class="flex flex-col gap-3 pt-2">
+                                <a href="Booking Confirmation.html" 
+                                   id="confirmBookingLink"
+                                   class="wf-btn-primary rounded-xl py-3.5 px-5 text-center font-bold text-base md:text-lg shadow-md block">
+                                    Confirm Seats &rarr;
+                                </a>
+                                <a href="Homepage.html" 
+                                   class="wf-btn-bg rounded-xl py-3 px-4 text-center font-medium text-sm md:text-base text-gray-900 block">
+                                    Cancel &amp; Return to Homepage
+                                </a>
+                            </div>
+
+                        </aside>
+
+                    </div>
+                </div>
+
+                <!-- Right-Side Wireframe Scrollbar Visual -->
+                <div class="wf-scrollbar-track shrink-0" aria-hidden="true">
+                    <span class="text-[10px] text-gray-600 leading-none">&#9650;</span>
+                    <div class="wf-scrollbar-thumb"></div>
+                    <span class="text-[10px] text-gray-600 leading-none">&#9660;</span>
+                </div>
+
+            </div>
+        </div>
+    </div>
+
+    <!-- ==========================================================================
+         INTERACTIVE SEAT SELECTION & BOOKING SUMMARY SCRIPT
+         Allows toggling seats, changing shows/times, and saving state to localStorage
+         so Booking Confirmation.html can read the user's choices.
+         ========================================================================== -->
+    <script>
+        // Pricing constants
+        const VIP_PRICE = 850;      // Rows A & B
+        const STD_PRICE = 550;      // Rows C to G
+        const FLAT_FEE = 50;        // Flat booking fee when >= 1 seat selected
+
+        // Auditorium configuration
+        const rows = ['A', 'B', 'C', 'D', 'E', 'F', 'G'];
+        const vipRows = new Set(['A', 'B']);
+
+        // Pre-occupied seats to give the wireframe an authentic lived-in look
+        const occupiedSeats = new Set([
+            'A4', 'A5', 'A6',
+            'B2', 'B8',
+            'C5', 'C6', 'C7',
+            'D4', 'D5',
+            'E2', 'E3', 'E9',
+            'F5', 'F6'
+        ]);
+
+        // Initial pre-selected seats so the summary panel looks populated right away
+        const selectedSeats = new Set(['B4', 'B5']);
+
+        // DOM Elements
+        const seatGridContainer = document.getElementById('seatGridContainer');
+        const selectedSeatsList = document.getElementById('selectedSeatsList');
+        const seatCountBadge = document.getElementById('seatCountBadge');
+        const vipCountEl = document.getElementById('vipCount');
+        const stdCountEl = document.getElementById('stdCount');
+        const vipSubtotalEl = document.getElementById('vipSubtotal');
+        const stdSubtotalEl = document.getElementById('stdSubtotal');
+        const bookingFeeEl = document.getElementById('bookingFee');
+        const totalPriceDisplay = document.getElementById('totalPriceDisplay');
+        const clearSeatsBtn = document.getElementById('clearSeatsBtn');
+        const productionSelect = document.getElementById('productionSelect');
+        const showtimeSelect = document.getElementById('showtimeSelect');
+        const summaryShowTitle = document.getElementById('summaryShowTitle');
+        const summaryShowtime = document.getElementById('summaryShowtime');
+        const confirmBookingLink = document.getElementById('confirmBookingLink');
+
+        // Helper: create a single seat button element
+        function createSeatElement(rowLetter, seatNumber) {
+            const seatId = `${rowLetter}${seatNumber}`;
+            const isOccupied = occupiedSeats.has(seatId);
+            const isSelected = selectedSeats.has(seatId);
+            const isVip = vipRows.has(rowLetter);
+
+            const btn = document.createElement('button');
+            btn.type = 'button';
+            btn.dataset.seatId = seatId;
+            btn.className = 'seat-btn';
+
+            if (isVip) btn.classList.add('seat-vip');
+
+            if (isOccupied) {
+                btn.classList.add('seat-occupied');
+                btn.disabled = true;
+                btn.title = `Seat ${seatId} (Occupied)`;
+                btn.innerHTML = '&#10005;'; // Wireframe 'X' for occupied seat
+            } else {
+                btn.textContent = seatId;
+                btn.title = `Seat ${seatId} - ${isVip ? 'VIP (₱850)' : 'Standard (₱550)'}`;
+                if (isSelected) {
+                    btn.classList.add('seat-selected');
+                }
+                btn.addEventListener('click', () => toggleSeat(seatId, btn));
+            }
+
+            return btn;
+        }
+
+        // Render the entire auditorium grid (Rows A-G, Seats 1-10 with 2 aisles)
+        function renderSeatGrid() {
+            seatGridContainer.innerHTML = '';
+
+            rows.forEach(rowLetter => {
+                const rowEl = document.createElement('div');
+                rowEl.className = 'flex items-center gap-2';
+
+                // Left Row Label
+                const leftLabel = document.createElement('span');
+                leftLabel.className = 'w-8 text-center font-bold text-sm md:text-base text-gray-800';
+                leftLabel.textContent = rowLetter;
+                rowEl.appendChild(leftLabel);
+
+                // Left Wing (Seats 1 - 3)
+                const leftWing = document.createElement('div');
+                leftWing.className = 'flex gap-2';
+                for (let n = 1; n <= 3; n++) {
+                    leftWing.appendChild(createSeatElement(rowLetter, n));
+                }
+                rowEl.appendChild(leftWing);
+
+                // Left Walkway Aisle Spacer
+                const leftAisle = document.createElement('span');
+                leftAisle.className = 'w-6 sm:w-8';
+                rowEl.appendChild(leftAisle);
+
+                // Center Orchestra (Seats 4 - 7)
+                const centerWing = document.createElement('div');
+                centerWing.className = 'flex gap-2';
+                for (let n = 4; n <= 7; n++) {
+                    centerWing.appendChild(createSeatElement(rowLetter, n));
+                }
+                rowEl.appendChild(centerWing);
+
+                // Right Walkway Aisle Spacer
+                const rightAisle = document.createElement('span');
+                rightAisle.className = 'w-6 sm:w-8';
+                rowEl.appendChild(rightAisle);
+
+                // Right Wing (Seats 8 - 10)
+                const rightWing = document.createElement('div');
+                rightWing.className = 'flex gap-2';
+                for (let n = 8; n <= 10; n++) {
+                    rightWing.appendChild(createSeatElement(rowLetter, n));
+                }
+                rowEl.appendChild(rightWing);
+
+                // Right Row Label
+                const rightLabel = document.createElement('span');
+                rightLabel.className = 'w-8 text-center font-bold text-sm md:text-base text-gray-800';
+                rightLabel.textContent = rowLetter;
+                rowEl.appendChild(rightLabel);
+
+                seatGridContainer.appendChild(rowEl);
+            });
+        }
+
+        // Toggle individual seat selection state
+        function toggleSeat(seatId, btnElement) {
+            if (selectedSeats.has(seatId)) {
+                selectedSeats.delete(seatId);
+                btnElement.classList.remove('seat-selected');
+            } else {
+                selectedSeats.add(seatId);
+                btnElement.classList.add('seat-selected');
+            }
+            updateBookingSummary();
+        }
+
+        // Update the right-hand Booking Summary panel & save to localStorage
+        function updateBookingSummary() {
+            const sortedSeats = Array.from(selectedSeats).sort();
+            seatCountBadge.textContent = sortedSeats.length;
+
+            // Render Selected Seat Tags
+            selectedSeatsList.innerHTML = '';
+            if (sortedSeats.length === 0) {
+                selectedSeatsList.innerHTML = '<span class="text-xs md:text-sm text-gray-500 italic">No seats selected yet. Click a seat on the map.</span>';
+            } else {
+                sortedSeats.forEach(seatId => {
+                    const isVip = vipRows.has(seatId.charAt(0));
+                    const tag = document.createElement('span');
+                    tag.className = 'inline-flex items-center gap-1.5 bg-[#cfd6de] border border-[#111111] rounded-md px-2.5 py-1 text-xs md:text-sm font-bold text-gray-900';
+                    tag.innerHTML = `
+                        <span>${seatId}${isVip ? ' (VIP)' : ''}</span>
+                        <button type="button" aria-label="Remove seat ${seatId}" class="hover:text-red-700 font-bold leading-none">&times;</button>
+                    `;
+                    tag.querySelector('button').addEventListener('click', () => {
+                        selectedSeats.delete(seatId);
+                        const seatBtn = seatGridContainer.querySelector(`[data-seat-id="${seatId}"]`);
+                        if (seatBtn) seatBtn.classList.remove('seat-selected');
+                        updateBookingSummary();
+                    });
+                    selectedSeatsList.appendChild(tag);
+                });
+            }
+
+            // Calculate VIP vs Standard totals
+            let vipCount = 0;
+            let stdCount = 0;
+            sortedSeats.forEach(seatId => {
+                if (vipRows.has(seatId.charAt(0))) {
+                    vipCount++;
+                } else {
+                    stdCount++;
+                }
+            });
+
+            const vipSubtotal = vipCount * VIP_PRICE;
+            const stdSubtotal = stdCount * STD_PRICE;
+            const fee = sortedSeats.length > 0 ? FLAT_FEE : 0;
+            const total = vipSubtotal + stdSubtotal + fee;
+
+            vipCountEl.textContent = vipCount;
+            stdCountEl.textContent = stdCount;
+            vipSubtotalEl.textContent = `₱${vipSubtotal.toLocaleString()}`;
+            stdSubtotalEl.textContent = `₱${stdSubtotal.toLocaleString()}`;
+            bookingFeeEl.textContent = `₱${fee.toLocaleString()}`;
+            totalPriceDisplay.textContent = `₱${total.toLocaleString()}`;
+
+            // Visual state on Confirm button
+            if (sortedSeats.length === 0) {
+                confirmBookingLink.classList.add('opacity-60', 'pointer-events-none');
+                confirmBookingLink.textContent = 'Select at least 1 seat';
+            } else {
+                confirmBookingLink.classList.remove('opacity-60', 'pointer-events-none');
+                confirmBookingLink.innerHTML = `Confirm ${sortedSeats.length} Seat${sortedSeats.length > 1 ? 's' : ''} &rarr;`;
+            }
+
+            // Persist current booking state for Booking Confirmation.html
+            try {
+                const selectedVenue = document.querySelector('input[name="venue_stage"]:checked')?.value || 'Main Hall';
+                localStorage.setItem('wireframe_booking', JSON.stringify({
+                    production: productionSelect.value,
+                    showtime: showtimeSelect.value,
+                    venue: selectedVenue,
+                    seats: sortedSeats,
+                    totalPrice: total
+                }));
+            } catch (e) {
+                // Ignore storage errors in restricted iframe environments
+            }
+        }
+
+        // Clear all selected seats
+        clearSeatsBtn.addEventListener('click', () => {
+            selectedSeats.clear();
+            document.querySelectorAll('.seat-btn.seat-selected').forEach(btn => {
+                btn.classList.remove('seat-selected');
+            });
+            updateBookingSummary();
+        });
+
+        // Handle Production Dropdown change -> update showtime options & summary
+        productionSelect.addEventListener('change', () => {
+            const selectedOption = productionSelect.options[productionSelect.selectedIndex];
+            const times = (selectedOption.dataset.times || '').split(',');
+
+            showtimeSelect.innerHTML = '';
+            times.forEach(time => {
+                const opt = document.createElement('option');
+                opt.value = time.trim();
+                opt.textContent = time.trim();
+                showtimeSelect.appendChild(opt);
+            });
+
+            summaryShowTitle.textContent = productionSelect.value;
+            summaryShowtime.textContent = showtimeSelect.value;
+            updateBookingSummary();
+        });
+
+        // Handle Showtime Dropdown change
+        showtimeSelect.addEventListener('change', () => {
+            summaryShowtime.textContent = showtimeSelect.value;
+            updateBookingSummary();
+        });
+
+        // Handle Venue Radio change
+        document.querySelectorAll('input[name="venue_stage"]').forEach(radio => {
+            radio.addEventListener('change', updateBookingSummary);
+        });
+
+        // Initialize grid and summary on page load
+        renderSeatGrid();
+        updateBookingSummary();
+    </script>
+</body>
+</html>

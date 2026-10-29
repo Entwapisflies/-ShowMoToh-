@@ -1,0 +1,389 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Booking Confirmation - Movie & Theater Ticketing Wireframe</title>
+    <!-- Tailwind CSS CDN for responsive layout utilities -->
+    <script src="https://cdn.tailwindcss.com"></script>
+    <style>
+        /* ==========================================================================
+           BASE & 30% SCALED WIREFRAME SIZING VARIABLES
+           Matches Homepage.html & Seat Selection.html dimensions and visual tokens
+           ========================================================================== */
+        :root {
+            --red-backdrop-max-width: 1500px;
+            --ticket-max-width: 720px; /* Scaled +30% from standard wireframe ticket */
+        }
+
+        body {
+            background-color: #120d0d; /* Very dark brown/black outer background */
+            font-family: 'Segoe UI', -apple-system, BlinkMacSystemFont, Roboto, Helvetica, Arial, sans-serif;
+            margin: 0;
+            padding: 0;
+        }
+
+        /* Outer Deep Red Container (#7c1919) */
+        .red-backdrop {
+            background-color: #7c1919;
+            max-width: var(--red-backdrop-max-width);
+            width: 96%;
+        }
+
+        /* Serif Header matching "INITIAL UI WIREFRAME: Booking Confirmation" */
+        .wireframe-title {
+            font-family: Georgia, 'Times New Roman', Times, serif;
+        }
+
+        /* Wireframe Application Window Borders & Top Bar */
+        .wf-window-border {
+            border: 2.5px solid #111111;
+        }
+
+        .wf-topbar-strip {
+            background-color: #cbd2d9; /* Light bluish-gray bar */
+        }
+
+        /* ==========================================================================
+           CENTER VINTAGE THEATER TICKET STYLES (Matches image_d8ff96.png)
+           ========================================================================== */
+        .ticket-wrapper {
+            width: 100%;
+            max-width: var(--ticket-max-width);
+        }
+
+        .ticket-outer-frame {
+            background-color: #8b1e3f; /* Thick maroon/crimson outer frame */
+            padding: 15px;
+            box-shadow: 0 4px 14px rgba(0, 0, 0, 0.12);
+        }
+
+        .ticket-inner-body {
+            background-color: #d6c7b2; /* Warm beige/tan inner ticket surface */
+            display: flex;
+            flex-direction: row;
+            align-items: stretch;
+            min-height: 330px;
+        }
+
+        /* Vertical perforated dotted maroon divider between main ticket and stub */
+        .ticket-stub-divider {
+            border-left: 3px dotted #8b1e3f;
+        }
+
+        /* Gold/Ochre five-pointed stars */
+        .ticket-stars {
+            color: #9c7a23;
+            letter-spacing: 0.65rem;
+            font-size: 1.15rem;
+            line-height: 1;
+            user-select: none;
+        }
+
+        /* Thin dark horizontal rule inside ticket */
+        .ticket-rule {
+            border: 0;
+            border-top: 1.5px solid #2b2b2b;
+            width: 100%;
+        }
+
+        /* Muted label vs bold dark value typography inside ticket */
+        .ticket-label {
+            color: #6e675f;
+            font-size: 0.95rem;
+            font-weight: 500;
+        }
+
+        .ticket-value {
+            color: #1f2421;
+            font-size: 1.08rem;
+            font-weight: 700;
+        }
+
+        /* Save Confirmation Button Below Ticket */
+        .save-confirm-btn {
+            background-color: #ffffff;
+            border: 1.5px solid #7a7a7a;
+            border-radius: 10px;
+            color: #1f2937;
+            transition: background-color 150ms ease, border-color 150ms ease, transform 100ms ease;
+        }
+
+        .save-confirm-btn:hover {
+            background-color: #f3f4f6;
+            border-color: #111111;
+        }
+
+        .save-confirm-btn:active {
+            transform: translateY(1px);
+        }
+
+        /* Responsive adjustments on small mobile screens */
+        @media (max-width: 640px) {
+            .ticket-inner-body {
+                flex-direction: column;
+            }
+            .ticket-stub-divider {
+                border-left: none;
+                border-top: 3px dotted #8b1e3f;
+            }
+        }
+
+        /* Clean print layout when user clicks Save Confirmation */
+        @media print {
+            body {
+                background-color: #ffffff;
+            }
+            nav, .no-print {
+                display: none !important;
+            }
+            .red-backdrop {
+                background-color: transparent !important;
+                padding: 0 !important;
+                box-shadow: none !important;
+            }
+            .wireframe-title {
+                color: #111111 !important;
+                margin-bottom: 16px !important;
+            }
+        }
+    </style>
+</head>
+<body class="min-h-screen flex flex-col items-center py-6 px-3 md:py-9 md:px-6 text-gray-900">
+
+    <!-- ==========================================================================
+         1. TOP NAVIGATION BAR (Scaled +30%)
+         "Booking confirmation" is highlighted in solid white (#ffffff) with dark
+         red text (#6e1919). All hrefs match the exact filenames in your folder.
+         ========================================================================== -->
+    <nav aria-label="Page Navigation" class="flex justify-center items-center flex-wrap gap-4 md:gap-5 mb-7 w-full max-w-[1500px]">
+        <!-- Inactive Page: Homepage.html -->
+        <a href="Homepage.html" 
+           class="bg-[#1b1212] border border-[#5e5252] text-gray-200 hover:text-white hover:border-gray-300 font-medium text-base md:text-lg px-8 py-3 rounded-full transition-colors">
+            Homepage
+        </a>
+
+        <!-- Inactive Page: Seat Selection.html -->
+        <a href="Seat Selection.html" 
+           class="bg-[#1b1212] border border-[#5e5252] text-gray-200 hover:text-white hover:border-gray-300 font-medium text-base md:text-lg px-8 py-3 rounded-full transition-colors">
+            Seat selection
+        </a>
+
+        <!-- Active Page: Booking Confirmation.html -->
+        <a href="Booking Confirmation.html" 
+           aria-current="page"
+           class="bg-white text-[#6e1919] font-medium text-base md:text-lg px-8 py-3 rounded-full shadow-md transition-transform hover:scale-105">
+            Booking confirmation
+        </a>
+
+        <!-- Inactive Page: Admin Dashboard.html -->
+        <a href="Admin Dashboard.html" 
+           class="bg-[#1b1212] border border-[#5e5252] text-gray-200 hover:text-white hover:border-gray-300 font-medium text-base md:text-lg px-8 py-3 rounded-full transition-colors">
+            Admin dashboard
+        </a>
+    </nav>
+
+    <!-- ==========================================================================
+         2. OUTER DEEP RED BACKDROP CONTAINER (Scaled +30%: max-width 1500px)
+         ========================================================================== -->
+    <div class="red-backdrop rounded-[38px] p-6 sm:p-8 md:p-12 shadow-2xl flex flex-col items-center">
+        
+        <!-- Wireframe Header Title -->
+        <h1 class="wireframe-title text-white text-center text-3xl sm:text-4xl md:text-5xl tracking-wide mb-8 font-normal">
+            INITIAL UI WIREFRAME: Booking Confirmation
+        </h1>
+
+        <!-- ======================================================================
+             3. MAIN APPLICATION WINDOW DIV
+             ====================================================================== -->
+        <div class="bg-white wf-window-border w-full flex flex-col shadow-xl overflow-hidden">
+            
+            <!-- Mock Browser Window Top Bar -->
+            <div class="bg-white border-b-[2.5px] border-[#111111] px-3 py-2.5 flex items-center gap-3">
+                <!-- Light bluish-gray bar strip -->
+                <div class="wf-topbar-strip h-8 md:h-9 flex-1 rounded-sm"></div>
+                <!-- Window Close 'X' Button (links back to Homepage.html) -->
+                <a href="Homepage.html" title="Return to Homepage" aria-label="Close window" class="w-9 h-9 flex items-center justify-center text-gray-800 hover:text-black transition-colors">
+                    <svg class="w-7 h-7" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round">
+                        <line x1="4" y1="4" x2="20" y2="20"></line>
+                        <line x1="20" y1="4" x2="4" y2="20"></line>
+                    </svg>
+                </a>
+            </div>
+
+            <!-- ==================================================================
+                 4. WINDOW BODY: CENTERED VINTAGE TICKET & SAVE CONFIRMATION BUTTON
+                 ================================================================== -->
+            <main class="w-full bg-white py-14 sm:py-20 md:py-24 px-4 sm:px-8 flex flex-col items-center justify-center min-h-[580px]">
+                
+                <!-- Ticket + Button Container (Matching Width) -->
+                <div class="ticket-wrapper flex flex-col items-center">
+                    
+                    <!-- VINTAGE THEATER TICKET GRAPHIC -->
+                    <section aria-label="Booking Confirmation Ticket" class="ticket-outer-frame w-full">
+                        <div class="ticket-inner-body">
+                            
+                            <!-- LEFT MAIN SECTION (~78% Width) -->
+                            <div class="w-full sm:w-[78%] px-6 sm:px-10 py-7 flex flex-col justify-between">
+                                
+                                <!-- Top 5 Gold Stars + Horizontal Line -->
+                                <div class="flex flex-col items-center">
+                                    <div class="ticket-stars mb-3 pl-2.5" aria-hidden="true">
+                                        &#9733;&#9733;&#9733;&#9733;&#9733;
+                                    </div>
+                                    <hr class="ticket-rule" />
+                                </div>
+
+                                <!-- Ticket Details Grid (Show, Showtime, Seats, Name, Ref) -->
+                                <div class="grid grid-cols-[100px_1fr] sm:grid-cols-[115px_1fr] gap-y-2.5 items-baseline my-6">
+                                    <span class="ticket-label">Show</span>
+                                    <span id="ticketShow" class="ticket-value">The Lion in Winter</span>
+
+                                    <span class="ticket-label">Showtime</span>
+                                    <span id="ticketShowtime" class="ticket-value">Fri 6:00 PM</span>
+
+                                    <span class="ticket-label">Seats</span>
+                                    <span id="ticketSeats" class="ticket-value">B5, B6</span>
+
+                                    <span class="ticket-label">Name</span>
+                                    <span id="ticketName" class="ticket-value">Kaori</span>
+
+                                    <span class="ticket-label">Ref</span>
+                                    <span id="ticketRef" class="ticket-value">TKT-01000</span>
+                                </div>
+
+                                <!-- Bottom Horizontal Line + 5 Gold Stars -->
+                                <div class="flex flex-col items-center">
+                                    <hr class="ticket-rule mb-3" />
+                                    <div class="ticket-stars pl-2.5" aria-hidden="true">
+                                        &#9733;&#9733;&#9733;&#9733;&#9733;
+                                    </div>
+                                </div>
+
+                            </div>
+
+                            <!-- RIGHT STUB SECTION (~22% Width) WITH VERTICAL BARCODE -->
+                            <div class="w-full sm:w-[22%] ticket-stub-divider px-5 py-6 flex items-center justify-center">
+                                <!-- Crisp SVG Vertical Barcode with horizontal stripes stretching top-to-bottom -->
+                                <svg class="w-full max-w-[96px] h-[275px]" viewBox="0 0 100 280" preserveAspectRatio="none" aria-label="Ticket Barcode">
+                                    <g fill="#222222">
+                                        <rect x="0" y="0" width="100" height="3.5" />
+                                        <rect x="0" y="7" width="100" height="1.5" />
+                                        <rect x="0" y="12" width="100" height="4" />
+                                        <rect x="0" y="19" width="100" height="2" />
+                                        <rect x="0" y="24" width="100" height="1.5" />
+                                        <rect x="0" y="29" width="100" height="4.5" />
+                                        <rect x="0" y="37" width="100" height="2" />
+                                        <rect x="0" y="42" width="100" height="3" />
+                                        <rect x="0" y="48" width="100" height="1.5" />
+                                        <rect x="0" y="53" width="100" height="4" />
+                                        <rect x="0" y="60" width="100" height="2.5" />
+                                        <rect x="0" y="66" width="100" height="1.5" />
+                                        <rect x="0" y="71" width="100" height="3.5" />
+                                        <rect x="0" y="78" width="100" height="2" />
+                                        <rect x="0" y="83" width="100" height="4.5" />
+                                        <rect x="0" y="91" width="100" height="1.5" />
+                                        <rect x="0" y="96" width="100" height="3" />
+                                        <rect x="0" y="102" width="100" height="2" />
+                                        <rect x="0" y="107" width="100" height="4" />
+                                        <rect x="0" y="114" width="100" height="1.5" />
+                                        <rect x="0" y="119" width="100" height="3.5" />
+                                        <rect x="0" y="126" width="100" height="2" />
+                                        <rect x="0" y="131" width="100" height="1.5" />
+                                        <rect x="0" y="136" width="100" height="4.5" />
+                                        <rect x="0" y="144" width="100" height="2" />
+                                        <rect x="0" y="149" width="100" height="3" />
+                                        <rect x="0" y="155" width="100" height="1.5" />
+                                        <rect x="0" y="160" width="100" height="4" />
+                                        <rect x="0" y="167" width="100" height="2.5" />
+                                        <rect x="0" y="173" width="100" height="1.5" />
+                                        <rect x="0" y="178" width="100" height="3.5" />
+                                        <rect x="0" y="185" width="100" height="2" />
+                                        <rect x="0" y="190" width="100" height="4.5" />
+                                        <rect x="0" y="198" width="100" height="1.5" />
+                                        <rect x="0" y="203" width="100" height="3" />
+                                        <rect x="0" y="209" width="100" height="2" />
+                                        <rect x="0" y="214" width="100" height="4" />
+                                        <rect x="0" y="221" width="100" height="1.5" />
+                                        <rect x="0" y="226" width="100" height="3.5" />
+                                        <rect x="0" y="233" width="100" height="2" />
+                                        <rect x="0" y="238" width="100" height="4.5" />
+                                        <rect x="0" y="246" width="100" height="1.5" />
+                                        <rect x="0" y="251" width="100" height="3" />
+                                        <rect x="0" y="257" width="100" height="2" />
+                                        <rect x="0" y="262" width="100" height="4" />
+                                        <rect x="0" y="269" width="100" height="1.5" />
+                                        <rect x="0" y="274" width="100" height="4.5" />
+                                    </g>
+                                </svg>
+                            </div>
+
+                        </div>
+                    </section>
+
+                    <!-- 5. SAVE CONFIRMATION BUTTON BELOW TICKET -->
+                    <button 
+                        type="button" 
+                        id="saveConfirmationBtn"
+                        class="save-confirm-btn w-full mt-7 py-3.5 px-6 flex items-center justify-center gap-2 text-base md:text-lg font-medium shadow-sm no-print"
+                    >
+                        <span class="text-xl leading-none" aria-hidden="true">&#8681;</span>
+                        <span id="saveBtnLabel">Save Confirmation</span>
+                    </button>
+
+                </div>
+
+            </main>
+
+        </div>
+    </div>
+
+    <!-- ==========================================================================
+         SCRIPT: DOWNLOAD / SAVE CONFIRMATION RECEIPT
+         Downloads a clean text confirmation slip and provides visual feedback
+         without altering the default wireframe values ("The Lion in Winter", "B5, B6", "Kaori").
+         ========================================================================== -->
+    <script>
+        const saveConfirmationBtn = document.getElementById('saveConfirmationBtn');
+        const saveBtnLabel = document.getElementById('saveBtnLabel');
+
+        saveConfirmationBtn.addEventListener('click', () => {
+            const show = document.getElementById('ticketShow').textContent;
+            const showtime = document.getElementById('ticketShowtime').textContent;
+            const seats = document.getElementById('ticketSeats').textContent;
+            const name = document.getElementById('ticketName').textContent;
+            const ref = document.getElementById('ticketRef').textContent;
+
+            const receiptContent = [
+                '============================================',
+                '         BOOKING CONFIRMATION TICKET        ',
+                '============================================',
+                `Show:      ${show}`,
+                `Showtime:  ${showtime}`,
+                `Seats:     ${seats}`,
+                `Name:      ${name}`,
+                `Ref:       ${ref}`,
+                '============================================'
+            ].join('\n');
+
+            // Trigger download of confirmation file
+            const blob = new Blob([receiptContent], { type: 'text/plain;charset=utf-8' });
+            const url = URL.createObjectURL(blob);
+            const a = document.createElement('a');
+            a.href = url;
+            a.download = `${ref}-Confirmation.txt`;
+            document.body.appendChild(a);
+            a.click();
+            document.body.removeChild(a);
+            URL.revokeObjectURL(url);
+
+            // Subtle button confirmation feedback
+            const originalText = saveBtnLabel.textContent;
+            saveBtnLabel.textContent = 'Confirmation Saved!';
+            setTimeout(() => {
+                saveBtnLabel.textContent = originalText;
+            }, 2200);
+        });
+    </script>
+</body>
+</html>

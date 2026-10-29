@@ -1,0 +1,384 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Admin Dashboard - Movie & Theater Ticketing Wireframe</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <style>
+        /* ==========================================================================
+           BASE & 30% SCALED WIREFRAME SIZING VARIABLES
+           Matches the established variables from Homepage.html & Seat Selection.html
+           ========================================================================== */
+        :root {
+            --red-backdrop-max-width: 1500px;
+            --sidebar-width: 270px;
+        }
+
+        body {
+            background-color: #140d0d; /* Very dark brown/black outer background */
+            font-family: 'Segoe UI', -apple-system, BlinkMacSystemFont, Roboto, Helvetica, Arial, sans-serif;
+            margin: 0;
+            padding: 0;
+        }
+
+        /* Outer Red Backdrop Container (#7c1919) */
+        .red-backdrop {
+            background-color: #7c1919;
+            max-width: var(--red-backdrop-max-width);
+            width: 96%;
+        }
+
+        /* Serif Header matching the other pages */
+        .wireframe-title {
+            font-family: Georgia, 'Times New Roman', Times, serif;
+        }
+
+        /* Wireframe Borders & Surface Colors */
+        .wf-border-thick {
+            border: 2.5px solid #111111;
+        }
+
+        .wf-border-medium {
+            border: 1.5px solid #1e242b;
+        }
+
+        .wf-panel-bg {
+            background-color: #cfd6de; /* Light slate gray matching sidebar & cards */
+        }
+
+        .wf-btn-bg {
+            background-color: #c4cdd6;
+            border: 1.5px solid #1e242b;
+        }
+
+        .wf-btn-bg:hover {
+            background-color: #d8dfe6;
+        }
+
+        .wf-btn-white {
+            background-color: #ffffff;
+            border: 1.5px solid #1e242b;
+        }
+
+        .wf-btn-white:hover {
+            background-color: #f3f4f6;
+        }
+
+        /* Custom Wireframe Radio Input */
+        .wf-radio {
+            appearance: none;
+            -webkit-appearance: none;
+            width: 22px;
+            height: 22px;
+            border: 1.5px solid #6b7280;
+            border-radius: 50%;
+            background-color: #f9fafb;
+            display: inline-grid;
+            place-content: center;
+            cursor: pointer;
+            flex-shrink: 0;
+        }
+
+        .wf-radio::before {
+            content: "";
+            width: 11px;
+            height: 11px;
+            border-radius: 50%;
+            transform: scale(0);
+            transition: 120ms transform ease-in-out;
+            background-color: #1f2937;
+        }
+
+        .wf-radio:checked::before {
+            transform: scale(1);
+        }
+
+        /* Right-side wireframe scrollbar visual */
+        .wf-scrollbar-track {
+            width: 22px;
+            background-color: #f1f3f5;
+            border-left: 2px solid #111111;
+            display: flex;
+            flex-direction: column;
+            justify-content: space-between;
+            align-items: center;
+            padding: 4px 0;
+            user-select: none;
+        }
+
+        .wf-scrollbar-thumb {
+            width: 12px;
+            background-color: #abb5be;
+            border-radius: 6px;
+            height: 76%;
+            margin-top: 8px;
+        }
+    </style>
+</head>
+<body class="min-h-screen flex flex-col items-center py-6 px-3 md:py-9 md:px-6 text-gray-900">
+
+    <!-- ==========================================================================
+         1. TOP NAVIGATION BAR (Scaled +30%)
+         "Admin dashboard" is highlighted. Styled matching the visual screenshot
+         (white background with red text and an outer gold/yellow ring).
+         ========================================================================== -->
+    <nav aria-label="Page Navigation" class="flex justify-center items-center flex-wrap gap-4 md:gap-5 mb-7 w-full max-w-[1500px]">
+        <!-- Inactive Page: Homepage.html -->
+        <a href="Homepage.html" 
+           class="bg-[#1b1212] border border-[#5e5252] text-gray-200 hover:text-white hover:border-gray-300 font-medium text-base md:text-lg px-8 py-3 rounded-full transition-colors">
+            Homepage
+        </a>
+
+        <!-- Inactive Page: Seat Selection.html -->
+        <a href="Seat Selection.html" 
+           class="bg-[#1b1212] border border-[#5e5252] text-gray-200 hover:text-white hover:border-gray-300 font-medium text-base md:text-lg px-8 py-3 rounded-full transition-colors">
+            Seat selection
+        </a>
+
+        <!-- Inactive Page: Booking Confirmation.html -->
+        <a href="Booking Confirmation.html" 
+           class="bg-[#1b1212] border border-[#5e5252] text-gray-200 hover:text-white hover:border-gray-300 font-medium text-base md:text-lg px-8 py-3 rounded-full transition-colors">
+            Booking confirmation
+        </a>
+
+        <!-- Active Page: Admin Dashboard.html -->
+        <a href="Admin Dashboard.html" 
+           aria-current="page"
+           class="bg-white text-[#7c1919] ring-2 ring-offset-2 ring-offset-[#140d0d] ring-[#fcd34d] font-bold text-base md:text-lg px-8 py-3 rounded-full shadow-md transition-transform hover:scale-105">
+            Admin dashboard
+        </a>
+    </nav>
+
+    <!-- ==========================================================================
+         2. OUTER RED BACKDROP CONTAINER
+         ========================================================================== -->
+    <div class="red-backdrop rounded-[38px] p-6 sm:p-8 md:p-12 shadow-2xl flex flex-col items-center">
+        
+        <!-- Wireframe Header Title -->
+        <h1 class="wireframe-title text-white text-center text-3xl sm:text-4xl md:text-5xl tracking-wide mb-8 font-normal">
+            INITIAL UI WIREFRAME: Admin Dash
+        </h1>
+
+        <!-- ======================================================================
+             3. INNER APPLICATION WINDOW DIV
+             ====================================================================== -->
+        <div class="bg-white wf-border-thick w-full flex flex-col shadow-xl overflow-hidden min-h-[700px]">
+            
+            <!-- Mock Browser Window Top Bar -->
+            <div class="bg-white border-b-[2.5px] border-[#111111] px-3 py-2.5 flex items-center gap-3">
+                <!-- Gray title bar strip -->
+                <div class="wf-panel-bg h-8 md:h-9 flex-1 rounded-sm"></div>
+                <!-- Window Close 'X' Button -->
+                <a href="Homepage.html" title="Return to Homepage" aria-label="Close window" class="w-9 h-9 flex items-center justify-center text-gray-800 hover:text-black transition-colors">
+                    <svg class="w-7 h-7" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round">
+                        <line x1="4" y1="4" x2="20" y2="20"></line>
+                        <line x1="20" y1="4" x2="4" y2="20"></line>
+                    </svg>
+                </a>
+            </div>
+
+            <!-- Window Body Wrapper -->
+            <div class="flex flex-1 w-full">
+                
+                <!-- Main Window Interior -->
+                <div class="flex-1 p-5 sm:p-7 md:p-8 flex flex-col">
+                    
+                    <!-- ==============================================================
+                         4. HEADER & MAIN CONTENT SPLIT
+                         ============================================================== -->
+                    
+                    <!-- Header Row: Title & Action Button -->
+                    <div class="flex flex-col lg:flex-row items-end justify-between gap-4 mb-4">
+                        <div class="w-full lg:w-[270px] shrink-0">
+                            <h2 class="font-bold text-lg sm:text-xl md:text-2xl text-gray-900 leading-tight">
+                                Admin<br>Dashboard
+                            </h2>
+                        </div>
+                        <div class="flex-1 flex justify-end">
+                            <button type="button" class="wf-btn-white rounded-lg px-5 py-2.5 font-bold text-sm md:text-base flex items-center gap-2 shadow-sm transition-transform active:translate-y-px">
+                                <span>+</span> Add Show
+                            </button>
+                        </div>
+                    </div>
+
+                    <!-- Layout: Sidebar + Right Data Panel -->
+                    <div class="flex flex-col lg:flex-row gap-6 md:gap-7 items-start flex-1">
+                        
+                        <!-- LEFT SIDEBAR DIV (Matches Homepage identically) -->
+                        <aside class="w-full lg:w-[270px] shrink-0 wf-panel-bg wf-border-thick p-4 md:p-5 flex flex-col gap-4 rounded-md">
+                            
+                            <!-- 5 Stacked Category Filter Buttons -->
+                            <button type="button" class="wf-btn-bg rounded-xl py-3 px-4 text-base md:text-[17px] font-medium text-gray-900 text-center transition-colors shadow-sm">
+                                Show Listings
+                            </button>
+                            <button type="button" class="wf-btn-bg rounded-xl py-3 px-4 text-base md:text-[17px] font-medium text-gray-900 text-center transition-colors shadow-sm">
+                                New Movies
+                            </button>
+                            <button type="button" class="wf-btn-bg rounded-xl py-3 px-4 text-base md:text-[17px] font-medium text-gray-900 text-center transition-colors shadow-sm">
+                                Showing Soon
+                            </button>
+                            <button type="button" class="wf-btn-bg rounded-xl py-3 px-4 text-base md:text-[17px] font-medium text-gray-900 text-center transition-colors shadow-sm">
+                                Promos
+                            </button>
+                            <button type="button" class="wf-btn-bg rounded-xl py-3 px-4 text-base md:text-[17px] font-medium text-gray-900 text-center transition-colors shadow-sm">
+                                Theatre Info
+                            </button>
+
+                            <!-- Nearby Theatres Sub-box -->
+                            <div class="wf-btn-bg rounded-xl p-4 mt-1 flex flex-col gap-3">
+                                <h3 class="font-bold text-sm md:text-base text-gray-900">
+                                    Nearby Theatres
+                                </h3>
+                                <label class="flex items-center gap-3 text-sm md:text-base text-gray-900 cursor-pointer select-none">
+                                    <input type="radio" name="nearby_theatre" value="main" class="wf-radio" checked />
+                                    <span>Main Hall</span>
+                                </label>
+                                <label class="flex items-center gap-3 text-sm md:text-base text-gray-900 cursor-pointer select-none">
+                                    <input type="radio" name="nearby_theatre" value="studio" class="wf-radio" />
+                                    <span>Studio Stage</span>
+                                </label>
+                            </div>
+                        </aside>
+
+                        <!-- RIGHT MAIN DATA PANEL -->
+                        <main class="flex-1 w-full flex flex-col gap-5">
+                            
+                            <!-- Key Metrics / Stats Row -->
+                            <section aria-label="Dashboard Statistics" class="grid grid-cols-1 sm:grid-cols-3 gap-5">
+                                <div class="wf-panel-bg wf-border-thick rounded-xl p-5 flex flex-col justify-between min-h-[110px]">
+                                    <h3 class="font-bold text-xs md:text-sm text-gray-800">Active shows</h3>
+                                    <span class="font-bold text-4xl md:text-5xl text-gray-900 mt-2">8</span>
+                                </div>
+                                <div class="wf-panel-bg wf-border-thick rounded-xl p-5 flex flex-col justify-between min-h-[110px]">
+                                    <h3 class="font-bold text-xs md:text-sm text-gray-800">Bookings today</h3>
+                                    <span class="font-bold text-4xl md:text-5xl text-gray-900 mt-2">1</span>
+                                </div>
+                                <div class="wf-panel-bg wf-border-thick rounded-xl p-5 flex flex-col justify-between min-h-[110px]">
+                                    <h3 class="font-bold text-xs md:text-sm text-gray-800">Seats left</h3>
+                                    <span class="font-bold text-4xl md:text-5xl text-gray-900 mt-2">221</span>
+                                </div>
+                            </section>
+
+                            <!-- Filter Search Input -->
+                            <div class="w-full">
+                                <input 
+                                    id="dashboardFilter"
+                                    type="text" 
+                                    placeholder="Filter by show, date or customer" 
+                                    class="w-full wf-panel-bg wf-border-thick rounded-lg px-5 py-3.5 text-sm md:text-base text-gray-900 placeholder-gray-600 focus:outline-none focus:ring-2 focus:ring-[#111111]"
+                                />
+                            </div>
+
+                            <!-- Dashboard Shows Data Table -->
+                            <div class="w-full overflow-x-auto">
+                                <table class="w-full text-left border-collapse whitespace-nowrap min-w-[700px]">
+                                    <thead>
+                                        <tr class="border-b-[2.5px] border-[#111111]">
+                                            <th class="py-3 px-2 font-bold text-sm md:text-base text-gray-900 w-[40%]">Show</th>
+                                            <th class="py-3 px-2 font-bold text-sm md:text-base text-gray-900 text-center">Date</th>
+                                            <th class="py-3 px-2 font-bold text-sm md:text-base text-gray-900 text-center">Booked</th>
+                                            <th class="py-3 px-2 font-bold text-sm md:text-base text-gray-900">Customers</th>
+                                            <th class="py-3 px-2 font-bold text-sm md:text-base text-gray-900 text-right"></th>
+                                        </tr>
+                                    </thead>
+                                    <tbody id="dashboardTableBody">
+                                        <!-- Row 1 -->
+                                        <tr class="border-b border-gray-400 dash-row">
+                                            <td class="py-3.5 px-2 text-sm md:text-[15px] font-medium text-gray-900">The Lion in Winter</td>
+                                            <td class="py-3.5 px-2 text-sm md:text-[15px] text-gray-800 text-center">Fri 6:00 PM</td>
+                                            <td class="py-3.5 px-2 text-sm md:text-[15px] text-gray-800 text-center">3 / 16</td>
+                                            <td class="py-3.5 px-2 text-sm md:text-[15px] text-gray-800">Kaori</td>
+                                            <td class="py-3.5 px-2 text-right">
+                                                <button class="wf-btn-bg rounded-lg px-5 py-1.5 font-bold text-sm text-gray-900 shadow-sm transition-transform active:scale-95">Edit</button>
+                                            </td>
+                                        </tr>
+                                        <!-- Row 2 -->
+                                        <tr class="border-b border-gray-400 dash-row">
+                                            <td class="py-3.5 px-2 text-sm md:text-[15px] font-medium text-gray-900">The Lion in Winter</td>
+                                            <td class="py-3.5 px-2 text-sm md:text-[15px] text-gray-800 text-center">Sat 2:00 PM</td>
+                                            <td class="py-3.5 px-2 text-sm md:text-[15px] text-gray-800 text-center">0 / 16</td>
+                                            <td class="py-3.5 px-2 text-sm md:text-[15px] text-gray-800">-</td>
+                                            <td class="py-3.5 px-2 text-right">
+                                                <button class="wf-btn-bg rounded-lg px-5 py-1.5 font-bold text-sm text-gray-900 shadow-sm transition-transform active:scale-95">Edit</button>
+                                            </td>
+                                        </tr>
+                                        <!-- Row 3 -->
+                                        <tr class="border-b border-gray-400 dash-row">
+                                            <td class="py-3.5 px-2 text-sm md:text-[15px] font-medium text-gray-900">The Lion in Winter</td>
+                                            <td class="py-3.5 px-2 text-sm md:text-[15px] text-gray-800 text-center">Sat 7:00 PM</td>
+                                            <td class="py-3.5 px-2 text-sm md:text-[15px] text-gray-800 text-center">0 / 16</td>
+                                            <td class="py-3.5 px-2 text-sm md:text-[15px] text-gray-800">-</td>
+                                            <td class="py-3.5 px-2 text-right">
+                                                <button class="wf-btn-bg rounded-lg px-5 py-1.5 font-bold text-sm text-gray-900 shadow-sm transition-transform active:scale-95">Edit</button>
+                                            </td>
+                                        </tr>
+                                        <!-- Row 4 -->
+                                        <tr class="border-b border-gray-400 dash-row">
+                                            <td class="py-3.5 px-2 text-sm md:text-[15px] font-medium text-gray-900">Noli Me Tangere: The Musical</td>
+                                            <td class="py-3.5 px-2 text-sm md:text-[15px] text-gray-800 text-center">Fri 7:30 PM</td>
+                                            <td class="py-3.5 px-2 text-sm md:text-[15px] text-gray-800 text-center">0 / 16</td>
+                                            <td class="py-3.5 px-2 text-sm md:text-[15px] text-gray-800">-</td>
+                                            <td class="py-3.5 px-2 text-right">
+                                                <button class="wf-btn-bg rounded-lg px-5 py-1.5 font-bold text-sm text-gray-900 shadow-sm transition-transform active:scale-95">Edit</button>
+                                            </td>
+                                        </tr>
+                                        <!-- Row 5 -->
+                                        <tr class="border-b border-gray-400 dash-row">
+                                            <td class="py-3.5 px-2 text-sm md:text-[15px] font-medium text-gray-900">Noli Me Tangere: The Musical</td>
+                                            <td class="py-3.5 px-2 text-sm md:text-[15px] text-gray-800 text-center">Sun 3:00 PM</td>
+                                            <td class="py-3.5 px-2 text-sm md:text-[15px] text-gray-800 text-center">0 / 16</td>
+                                            <td class="py-3.5 px-2 text-sm md:text-[15px] text-gray-800">-</td>
+                                            <td class="py-3.5 px-2 text-right">
+                                                <button class="wf-btn-bg rounded-lg px-5 py-1.5 font-bold text-sm text-gray-900 shadow-sm transition-transform active:scale-95">Edit</button>
+                                            </td>
+                                        </tr>
+                                        <!-- Row 6 -->
+                                        <tr class="dash-row">
+                                            <td class="py-3.5 px-2 text-sm md:text-[15px] font-medium text-gray-900">A Midsummer Night's Dream</td>
+                                            <td class="py-3.5 px-2 text-sm md:text-[15px] text-gray-800 text-center">Sat 5:00 PM</td>
+                                            <td class="py-3.5 px-2 text-sm md:text-[15px] text-gray-800 text-center">0 / 16</td>
+                                            <td class="py-3.5 px-2 text-sm md:text-[15px] text-gray-800">-</td>
+                                            <td class="py-3.5 px-2 text-right">
+                                                <button class="wf-btn-bg rounded-lg px-5 py-1.5 font-bold text-sm text-gray-900 shadow-sm transition-transform active:scale-95">Edit</button>
+                                            </td>
+                                        </tr>
+                                    </tbody>
+                                </table>
+                            </div>
+                        </main>
+                    </div>
+                </div>
+
+                <!-- Right-Side Wireframe Scrollbar Visual -->
+                <div class="wf-scrollbar-track shrink-0" aria-hidden="true">
+                    <!-- Up Arrow -->
+                    <span class="text-[10px] text-gray-600 leading-none">&#9650;</span>
+                    <!-- Scrollbar Thumb -->
+                    <div class="wf-scrollbar-thumb"></div>
+                    <!-- Down Arrow -->
+                    <span class="text-[10px] text-gray-600 leading-none">&#9660;</span>
+                </div>
+
+            </div>
+        </div>
+    </div>
+
+    <!-- Script to handle Live Search Filtering for the Admin Table -->
+    <script>
+        document.addEventListener('DOMContentLoaded', () => {
+            const filterInput = document.getElementById('dashboardFilter');
+            const dashRows = document.querySelectorAll('.dash-row');
+
+            filterInput.addEventListener('input', (e) => {
+                const query = e.target.value.toLowerCase().trim();
+                dashRows.forEach(row => {
+                    const rowText = row.innerText.toLowerCase();
+                    // Display as table-row if match is found, else hide
+                    row.style.display = rowText.includes(query) ? 'table-row' : 'none';
+                });
+            });
+        });
+    </script>
+</body>
+</html>
